@@ -1,7 +1,21 @@
-spec_version: 1
 name: code_debug_env
-type: space
-runtime: fastapi
-app: server.app:app
-port: 8000
+version: "1.0.0"
+description: >
+  CodeDebugEnv — an AI agent finds and fixes bugs in Python code.
+  The agent must identify the logical error based on hints and return fixed code.
 
+environment:
+  entrypoint: server.code_debug_env_environment:CodeDebugEnvironment
+
+tasks:
+  - name: easy_find_max
+    description: >
+      Task 1 (Easy): The find_max function fails on lists with only negative numbers. 
+      Fix it to properly handle all valid input cases.
+    task_level: 1
+
+  - name: medium_palindrome
+    description: >
+      Task 2 (Medium): The is_palindrome function is failing because it doesn't account 
+      for case sensitivity. Fix the string comparison gracefully.
+    task_level: 2

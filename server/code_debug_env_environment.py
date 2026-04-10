@@ -81,7 +81,12 @@ class CodeDebugEnvironment(Environment):
         self._attempts = 5
 
     def reset(self, seed=None, episode_id=None, **kwargs) -> CodeDebugObservation:
-        self._current_problem = random.choice(PROBLEMS)
+        task_level = kwargs.get('task_level', 1)
+        # Use task_level to select the problem uniquely (1-based index)
+        # If task_level > number of problems, just bound it
+        idx = max(0, min(len(PROBLEMS) - 1, task_level - 1))
+        self._current_problem = PROBLEMS[idx]
+        
         self._attempts = 5
         self._state = CodeDebugState(
             episode_id=episode_id or str(uuid4()), 
