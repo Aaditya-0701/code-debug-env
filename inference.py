@@ -17,10 +17,15 @@ from models import CodeDebugAction
 from server.code_debug_env_environment import CodeDebugEnvironment
 
 # ── Environment variable setup ────────────────────────────────────────────────
-API_BASE_URL = os.getenv("API_BASE_URL", "https://api-inference.huggingface.co/v1/")
+API_BASE_URL = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1/")
 MODEL_NAME   = os.getenv("MODEL_NAME",   "meta-llama/Meta-Llama-3-8B-Instruct")
-# You must export HF_TOKEN in your terminal before running this script
 HF_TOKEN     = os.getenv("HF_TOKEN")
+
+if not HF_TOKEN:
+    token_path = os.path.expanduser("~/.cache/huggingface/token")
+    if os.path.exists(token_path):
+        with open(token_path, "r") as f:
+            HF_TOKEN = f.read().strip()
 
 SYSTEM_PROMPT = """You are an expert Python programming assistant.
 Your job is to fix the buggy code presented to you.
@@ -148,6 +153,6 @@ def main():
 
 if __name__ == "__main__":
     if not HF_TOKEN:
-        print("Error: Please set HF_TOKEN environment variable.")
+        print("Error: Please set HF_TOKEN environment variable or login via `hf auth login`.")
         sys.exit(1)
     main()
