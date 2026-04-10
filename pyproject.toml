@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "code-debug-env"
+version = "1.0.0"
+description = "CodeDebugEnv — an AI agent finds and fixes bugs in Python code"
+requires-python = ">=3.10"
+dependencies = [
+    # openenv-core provides: Environment, Action, Observation, State, create_app
+    # [core] installs the server extras: fastapi, uvicorn, websockets, etc.
+    "openenv-core[core]>=0.2.2",
+    "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "httpx>=0.25.0",
+]
+
+[project.scripts]
+# Enables: uv run server
+server = "server.app:main"
+
+[tool.setuptools]
+include-package-data = true
+packages = ["server"]
