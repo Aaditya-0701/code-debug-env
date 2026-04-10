@@ -28,6 +28,7 @@ from openenv.core.env_server import create_app
 from server.code_debug_env_environment import CodeDebugEnvironment
 from models import CodeDebugAction, CodeDebugObservation
 
+os.environ["ENABLE_WEB_INTERFACE"] = "true"
 app = create_app(
     CodeDebugEnvironment,
     CodeDebugAction,
@@ -39,7 +40,7 @@ app = create_app(
 def main():
     """Entry point for: uv run server  (defined in pyproject.toml scripts)."""
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=7860)
 
 
 if __name__ == "__main__":

@@ -33,12 +33,12 @@ Your job is to fix the buggy code presented to you.
 AVAILABLE ACTION (respond with exactly one JSON object per turn):
 
 To submit your fixed code:
-{"fixed_code": "def my_func():\\n    # fixed code goes here"}
+{"thought": "Your reasoning about the bug", "fixed_code": "def my_func():\\n    # fixed code goes here"}
 
-1. RESPOND: Respond with ONLY a valid JSON object matching the schema.
-2. NO MARKDOWN: Do not wrap the JSON output in markdown ```json ... ``` blocks.
-3. FIX: Analyze the bug logically before providing the fix in your response. 
-Ensure proper indentation in your fixed_code string."""
+1. THOUGHT: You MUST always provide a 'thought' field containing your reasoning before writing the code.
+2. RESPOND: Respond with ONLY a valid JSON object matching the schema.
+3. NO MARKDOWN: Do not wrap the JSON output in markdown ```json ... ``` blocks.
+4. FIX: Ensure proper indentation in your fixed_code string."""
 
 def call_llm(client: OpenAI, messages: list[dict]) -> dict:
     """Call the LLM and parse its JSON response into a dict."""
@@ -83,7 +83,7 @@ def run_task(env: CodeDebugEnvironment, client: OpenAI, task_level: int) -> floa
     ]
 
     final_score = 0.0
-    max_steps = 5
+    max_steps = 10
     rewards = []
 
     for step_num in range(1, max_steps + 1):
@@ -101,6 +101,10 @@ def run_task(env: CodeDebugEnvironment, client: OpenAI, task_level: int) -> floa
         reward = obs.reward if obs.reward is not None else 0.0
         rewards.append(reward)
         done = obs.done
+        
+        # Isolate the thought logging from the strict [STEP] sequence rules
+        if action.thought:
+            print(f"[REASONING] {action.thought}", flush=True)
 
         # ── MANDATORY LOG: STEP ───────────────────────────────────────────
         print(f"[STEP] step={step_num} action=submit_code reward={reward:.2f} done={str(done).lower()} error=null", flush=True)
@@ -153,6 +157,8 @@ def main():
 
 if __name__ == "__main__":
     if not HF_TOKEN:
-        print("Error: Please set HF_TOKEN environment variable or login via `hf auth login`.")
-        sys.exit(1)
+        print("Error: Please set HF_TOKEN environment variable or login via `hf auth login`.", file=sys.stderr)
+        # We removed sys.exit(1) to let testing pipelines handle graceful shutdowns automatically.
+    
+    # We always attempt to run main, even if token warns (some pipelines inject it late natively).
     main()

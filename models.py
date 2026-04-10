@@ -11,6 +11,7 @@ from openenv.core.env_server.types import Action, Observation, State
 
 class CodeDebugAction(Action):
     """Action for the Code Debug Env - submitting fixed Python code."""
+    thought: Optional[str] = Field(default=None, description="Reasoning about the bug and how to fix it.")
     fixed_code: str = Field(..., description="The fully corrected Python code.")
 
 class CodeDebugObservation(Observation):
