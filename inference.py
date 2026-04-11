@@ -147,12 +147,12 @@ def main():
     env = CodeDebugEnvironment()
 
     total_score = 0.0
-    # We have 2 levels in our environment
-    for level in [1, 2]:
+    # We have 3 levels in our environment
+    for level in [1, 2, 3]:
         score = run_task(env, client, level)
         total_score += score
 
-    print(f"\nTotal Score: {total_score:.1f} / 2.0", flush=True)
+    print(f"\nTotal Score: {total_score:.1f} / 3.0", flush=True)
 
 
 if __name__ == "__main__":

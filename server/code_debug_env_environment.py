@@ -63,6 +63,30 @@ PROBLEMS = [
                 word = word.lower()
                 return word == word[::-1]
         ''')
+    },
+    {
+        "buggy_code": textwrap.dedent('''\
+            def count_vowels(text):
+                count = 0
+                for char in text:
+                    if char in "aeiou":
+                        count += 1
+                return count
+        '''),
+        "asserts": textwrap.dedent('''\
+            assert count_vowels("hello") == 2
+            assert count_vowels("HELLO") == 2
+            assert count_vowels("apple") == 2
+        '''),
+        "hint": "What about uppercase vowels?",
+        "correct_code": textwrap.dedent('''\
+            def count_vowels(text):
+                count = 0
+                for char in text.lower():
+                    if char in "aeiou":
+                        count += 1
+                return count
+        ''')
     }
 ]
 
